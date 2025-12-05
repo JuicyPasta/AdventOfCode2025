@@ -7,7 +7,10 @@ using namespace std;
 
 
 int day1_part1() {
-    freopen("input.txt", "r", stdin);
+    if (!freopen("input.txt", "r", stdin)) {
+        cerr << "Error opening file" << endl;
+        return -1;
+    }
 
     int pos = 50; 
     int zero_count = 0;
@@ -37,26 +40,35 @@ int day1_part1() {
 }
 
 int day1_part2() {
-    freopen("input.txt", "r", stdin);
+    // 1. CLEAR THE FLAGS from the previous run
+    cin.clear(); 
 
+    // 2. Re-open the file
+    if (!freopen("input.txt", "r", stdin)) {
+        cerr << "Error opening file" << endl;
+        return -1;
+    }
     int pos = 50; 
     int zero_count = 0;
     std::string line;
 
     while (cin >> line) {
         int times = stoi(line.substr(1, line.size()));
+        zero_count += std::abs(times / 100);
+        times = times % 100;
+
         line[0] == 'L' ? pos -= times : pos += times;
 
-        zero_count += pos / 100;
-
-        pos = pos % 100;
-        if (pos < 0) {
+        if (pos == 0 || pos == 100 || pos == -100) {
+            zero_count++;
+            pos = 0;
+        } else if (pos < 0) {
+            zero_count++;
             pos = 100+pos;
+        } else if (pos > 100) {
+            zero_count++;
+            pos = pos % 100;
         }
-        cout << "Read line: " << line << " times " << times <<  " New Pos: " << pos << endl;
-
-        if (pos == 0) zero_count++;
-
     }    
 
     cout << "Zero Count: " << zero_count << endl;
@@ -65,8 +77,8 @@ int day1_part2() {
 }
 
 int main () {
-    //int day1_part1_out = day1_part1();
-    //cout << "Day 1 part 1: " << day1_part1_out << endl;
+    int day1_part1_out = day1_part1();
+    cout << "Day 1 part 1: " << day1_part1_out << endl;
 
     int day1_part2_out = day1_part2();
     cout << "Day 1 part 2: " << day1_part2_out << endl;
